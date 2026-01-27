@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:state_management/models/todo_model.dart';
 import 'package:state_notifier/state_notifier.dart';

@@ -1,13 +1,9 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:state_management/models/todo_model.dart';
 import 'package:state_management/providers/all_providers.dart';
 import 'package:state_management/widgets/title_widget.dart';
 import 'package:state_management/widgets/todo_list_item_widget.dart';
 import 'package:state_management/widgets/toolbar_widget.dart';
-import 'package:uuid/uuid.dart';
 
 class TodoApp extends ConsumerWidget {
   TodoApp({super.key});
@@ -15,7 +11,7 @@ class TodoApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var allTodos = ref.watch(todoListProvider);
+    var allTodos = ref.watch(filteredTodoList);
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
@@ -32,7 +28,7 @@ class TodoApp extends ConsumerWidget {
               },
             ),
             const SizedBox(height: 20),
-            const ToolbarWidget(),
+            ToolbarWidget(),
             for (var i = 0; i < allTodos.length; i++)
               Dismissible(
                 key: ValueKey(allTodos[i].id),

@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:state_management/models/todo_model.dart';
 import 'package:state_management/providers/all_providers.dart';
 
 class TodoListItemWidget extends ConsumerStatefulWidget {
-
-  const TodoListItemWidget({super.key,});
+  const TodoListItemWidget({super.key});
 
   @override
   ConsumerState<TodoListItemWidget> createState() => _TodoListItemWidgetState();

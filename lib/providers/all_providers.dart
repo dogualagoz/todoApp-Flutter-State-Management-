@@ -4,6 +4,12 @@ import 'package:state_management/models/todo_model.dart';
 import 'package:state_management/providers/todo_list_manager.dart';
 import 'package:uuid/uuid.dart';
 
+enum TodoListFilter { all, active, completed }
+
+final todoListFilter = StateProvider<TodoListFilter>((ref) {
+  return TodoListFilter.all;
+});
+
 final todoListProvider =
     StateNotifierProvider<TodoListManager, List<TodoModel>>((ref) {
       return TodoListManager([
@@ -13,6 +19,20 @@ final todoListProvider =
         TodoModel(id: const Uuid().v4(), description: "Tv izle"),
       ]);
     });
+
+final filteredTodoList = Provider<List<TodoModel>>((ref) {
+  final filter = ref.watch(todoListFilter);
+  final todoList = ref.watch(todoListProvider);
+
+  switch (filter) {
+    case TodoListFilter.all:
+      return todoList;
+    case TodoListFilter.completed:
+      return todoList.where((element) => element.completed).toList();
+    case TodoListFilter.active:
+      return todoList.where((element) => !element.completed).toList();
+  }
+});
 
 final unCompletedTodoCountProvider = Provider<int>((ref) {
   final allTodo = ref.watch(todoListProvider);

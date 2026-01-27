@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:state_management/models/todo_model.dart';
+import 'package:state_management/providers/all_providers.dart';
 import 'package:state_management/widgets/title_widget.dart';
 import 'package:state_management/widgets/todo_list_item_widget.dart';
 import 'package:state_management/widgets/toolbar_widget.dart';
+import 'package:uuid/uuid.dart';
 
-class TodoApp extends StatelessWidget {
+class TodoApp extends ConsumerWidget {
   TodoApp({super.key});
   final newTodoController = TextEditingController();
 
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    var allTodos = ref.watch(todoListProvider);
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
@@ -17,17 +23,23 @@ class TodoApp extends StatelessWidget {
             const TitleWidget(),
             TextField(
               controller: newTodoController,
-              decoration: InputDecoration(labelText: "Bugün neler yapacaksın ?"),
-              onSubmitted: (newTodo){
-                debugPrint('sunu ekle $newTodo');
+              decoration: InputDecoration(
+                labelText: "Bugün neler yapacaksın ?",
+              ),
+              onSubmitted: (newTodo) {
+               ref.read(todoListProvider.notifier).addTodo(newTodo);
               },
             ),
-            const SizedBox(height: 20,),
+            const SizedBox(height: 20),
             const ToolbarWidget(),
-            const TodoListItemWidget(),
-            
-
-              
+            for (var i = 0; i < allTodos.length; i++)
+              Dismissible(
+                key: ValueKey(allTodos[i].id),
+                child: TodoListItemWidget(item: allTodos[i]),
+                onDismissed: (direction) {
+                  ref.read(todoListProvider.notifier).remove(allTodos[i]);
+                },
+              ),
           ],
         ),
       ),

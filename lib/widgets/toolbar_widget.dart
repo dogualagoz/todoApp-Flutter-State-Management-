@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:state_management/providers/all_providers.dart';
 
-class ToolbarWidget extends StatelessWidget {
+class ToolbarWidget extends ConsumerWidget {
   const ToolbarWidget({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const Expanded(child: Text("4 items left")),
+        Expanded(
+          child: Text(
+            "${ref.watch(todoListProvider.notifier).onCompletedTodoCount().toString()} items left",
+          ),
+        ),
         Tooltip(
           message: "All Todos",
           child: TextButton(onPressed: () {}, child: const Text("All")),

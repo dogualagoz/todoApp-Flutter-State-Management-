@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:state_management/models/todo_model.dart';
@@ -10,7 +12,6 @@ import 'package:uuid/uuid.dart';
 class TodoApp extends ConsumerWidget {
   TodoApp({super.key});
   final newTodoController = TextEditingController();
-
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -27,7 +28,7 @@ class TodoApp extends ConsumerWidget {
                 labelText: "Bugün neler yapacaksın ?",
               ),
               onSubmitted: (newTodo) {
-               ref.read(todoListProvider.notifier).addTodo(newTodo);
+                ref.read(todoListProvider.notifier).addTodo(newTodo);
               },
             ),
             const SizedBox(height: 20),
@@ -35,7 +36,12 @@ class TodoApp extends ConsumerWidget {
             for (var i = 0; i < allTodos.length; i++)
               Dismissible(
                 key: ValueKey(allTodos[i].id),
-                child: TodoListItemWidget(item: allTodos[i]),
+                child: ProviderScope(
+                  overrides: [
+                    currentTodoProvider.overrideWithValue(allTodos[i]),
+                  ],
+                  child: const TodoListItemWidget(),
+                ),
                 onDismissed: (direction) {
                   ref.read(todoListProvider.notifier).remove(allTodos[i]);
                 },

@@ -7,12 +7,17 @@ class ToolbarWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final onCompletedTodoCount = ref.watch(unCompletedTodoCountProvider);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Expanded(
           child: Text(
-            "${ref.watch(todoListProvider.notifier).onCompletedTodoCount().toString()} items left",
+            onCompletedTodoCount == 0
+                ? "All todos completed"
+                : "${onCompletedTodoCount.toString()} Todos left",
+            overflow: TextOverflow.ellipsis,
+
           ),
         ),
         Tooltip(
